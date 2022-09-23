@@ -4,16 +4,14 @@ Models a percolation system with a union-find data structure.
 
 ## Compile
 
-    $ javac -cp .:.lift/algs4.jar *.java
+    $ javac -cp .:algs4.jar *.java
 
 ## Usage
 
-    $ java -cp .:.lift/algs4.jar PercolationVisualizer <input txt file name>
-    $ java -cp .:.lift/algs4.jar PercolationStats <grid dimension> <number of trials>
-    $ java -cp .:.lift/algs4.jar InteractivePercolationVisualizer <grid dimension (default 10)>
+    $ java -cp .:algs4.jar PercolationStats <grid dimension> <number of trials>
+    $ java -cp .:algs4.jar InteractivePercolationVisualizer <grid dimension (default 10)>
 
 ## Example commands
 
-    $ java -cp .:.lift/algs4.jar PercolationVisualizer test_files/input10.txt
-    $ java -cp .:.lift/algs4.jar PercolationStats 10 20
-    $ java -cp .:.lift/algs4.jar InteractivePercolationVisualizer 15
+    $ java -cp .:algs4.jar PercolationStats 10 20
+    $ java -cp .:algs4.jar InteractivePercolationVisualizer 15
