@@ -10,11 +10,11 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class Percolation {
-    private final int mN;                   // row and column size
-    private final int mSize;                // grid size
+    private int mN;                   // row and column size
+    private int mSize;                // grid size
     private int numOpenSites;               // number of open sites
     private boolean[] openSites;            // keep track of open sites
-    private final WeightedQuickUnionUF ufA;  // track surrounding open sites w/ UF data structure
+    private WeightedQuickUnionUF ufA;  // track surrounding open sites w/ UF data structure
 
      // create n-by-n grid, with all sites blocked n^2 time represent blocked? none connected w/ each other
     public Percolation(int n) {
@@ -57,18 +57,18 @@ public class Percolation {
     private void unionOpenSites(int row, int col) {
         int i = xyTo1D(row, col);
 
-        // NOT left edge
+        // not left edge
         if (col != 1)
             unionOpen(i, i - 1);
-        // NOT right edge
+        // not right edge
         if (col != mN)
             unionOpen(i, i + 1);
-        // NOT top edge
+        // not top edge
         if (row != 1)
             unionOpen(i, i - mN);
         else
             ufA.union(0, i);
-        // NOT bottom edge
+        // not bottom edge
         if (row != mN)
             unionOpen(i, i + mN);
         else
