@@ -1,7 +1,6 @@
 /******************************************************************************
  *  Compilation: testing
  *  Execution: testing
- *  Name: Mary Wang
  *  Date: 2017 Aug 5
  *  Purpose of program: model a percolation system
  ******************************************************************************/
