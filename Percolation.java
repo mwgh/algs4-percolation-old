@@ -23,9 +23,7 @@ public class Percolation {
         mSize = mN * mN;
         ufA = new WeightedQuickUnionUF(mSize + 2); // 2 virtual sites
 
-        // extra top and bottom node connected to rows
-        // all sites closed except for start and end
-        int[] id = new int[mSize + 2]; // grid array
+        int[] id = new int[mSize + 2];
         openSites = new boolean[mSize + 2];
 
         for (int i = 0; i < id.length; i++) {
@@ -33,7 +31,6 @@ public class Percolation {
             openSites[i] = false;
         }
 
-        // don't count these as open sites
         openSites[0] = true;
         openSites[mSize + 1] = true;
     }
@@ -42,13 +39,10 @@ public class Percolation {
     public    void open(int row, int col) {
         validate(row, col);
 
-        // open it because it's not open
         if (!isOpen(row, col)) {
-            // keep track of open sites
             openSites[xyTo1D(row, col)] = true;
             numOpenSites++;
 
-            // actual logic: union with surrounding open sites
             unionOpenSites(row, col);
         }
     }
@@ -83,7 +77,6 @@ public class Percolation {
 
     // convert row, col address to array index
     private int xyTo1D(int row, int col) {
-        // validate(row, col); // could be unneccessary
         return ((row - 1) * mN) + col;
     }
 
@@ -119,7 +112,7 @@ public class Percolation {
         Percolation p = new Percolation(5);
 
         while (!p.percolates()) {
-            // choose a site uniformly at random among all _blocked sites_
+            // choose a site uniformly at random
             int x = StdRandom.uniform(p.mN) + 1;
             int y = StdRandom.uniform(p.mN) + 1;
 
