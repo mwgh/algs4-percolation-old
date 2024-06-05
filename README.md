@@ -1,2 +1,1 @@
-[Percolation](https://introcs.cs.princeton.edu/java/assignments/percolation.html)  
-https://algs4.cs.princeton.edu/15uf/
+[Coursera Algorithms I](https://www.coursera.org/learn/algorithms-part1) week 1
