@@ -54,15 +54,12 @@ public class Percolation {
             if (col != 1 && isOpen(row, col - 1) && !isFull(row, col - 1)) {
                 fill(row, col - 1);
             }
-
             if (col != mN && isOpen(row, col + 1) && !isFull(row, col + 1)) {
                 fill(row, col + 1);
             }
-
             if (row != 1 && isOpen(row - 1, col) && !isFull(row - 1, col)) {
                 fill(row - 1, col);
             }
-
             if (row != mN && isOpen(row + 1, col) && !isFull(row + 1, col)) {
                 fill(row + 1, col);
             }
@@ -75,15 +72,12 @@ public class Percolation {
         if (col != 1) {
             isNeighbourFull |= isFull(row, col - 1);
         }
-
         if (col != mN) {
             isNeighbourFull |= isFull(row, col + 1);
         }
-
         if (row != 1) {
             isNeighbourFull |= isFull(row - 1, col);
         }
-
         if (row != mN) {
             isNeighbourFull |= isFull(row + 1, col);
         }
@@ -97,18 +91,15 @@ public class Percolation {
         if (col != 1) {
             unionOpen(i, i - 1);
         }
-
         if (col != mN) {
             unionOpen(i, i + 1);
         }
-
         if (row != 1) {
             unionOpen(i, i - mN);
         } else {
             // Union the site (row, col) with the virtual top site
             ufA.union(i, mSize);
         }
-
         if (row != mN) {
             unionOpen(i, i + mN);
         }
