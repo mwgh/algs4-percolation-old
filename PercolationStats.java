@@ -1,6 +1,9 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
+// 2 arguments
+//    1. Length of 1 side of the square grid
+//    2. Number of trials
 public class PercolationStats {
     private static final double CONFIDENCE_95 = 1.96;
     private int mT;
@@ -44,7 +47,6 @@ public class PercolationStats {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.err.println("Needs 2 arguments 1. Length of a side of the square grid & 2. number of trials");
             System.exit(1);
         }
         PercolationStats ps = new PercolationStats(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
