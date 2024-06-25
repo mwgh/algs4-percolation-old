@@ -44,10 +44,6 @@ public class Percolation {
     }
     
     private void fill(int row, int col) {
-        if (!isOpen(row, col)) {
-            assert false;
-        }
-
         if (row == 1 || isNeighbourFull(row, col)) {
             site[xyTo1D(row, col)] = CellStatus.FULL;
 
