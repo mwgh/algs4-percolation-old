@@ -1,123 +1,157 @@
-/******************************************************************************
- *  Date: 2017 Aug 5
- *  Purpose of program: model a percolation system
- ******************************************************************************/
-
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class Percolation {
-    private int mN;                    // Row and column size
-    private int mSize;                 // Grid size
-    private int numOpenSites;          // Number of open sites
-    private boolean[] openSites;       // Keep track of open sites
-    private WeightedQuickUnionUF ufA;  // Track surrounding open sites w/ UF data structure
+    private int mN;                     // Row and column size
+    private int mSize;                  // Grid size
+    private int openSites;              // Number of open sites
+    private CellStatus[] site;          // Keep track of blocked, open, and full sites
+    private WeightedQuickUnionUF ufA;   // Percolation union-find
 
-     // Create n-by-n grid, with all sites blocked n^2 time represent blocked? none connected w/ each other
+    private enum CellStatus {
+        BLOCKED, OPEN, FULL
+    }
+
     public Percolation(int n) {
-        if (n <= 0) throw new java.lang.IllegalArgumentException("Size must be positive");
+        if (n <= 0) {
+            throw new IllegalArgumentException("Size must be positive.");
+        }
+
         mN = n;
         mSize = mN * mN;
-        ufA = new WeightedQuickUnionUF(mSize + 2); // 2 virtual sites
+        ufA = new WeightedQuickUnionUF(mSize + 1);
 
-        int[] id = new int[mSize + 2];
-        openSites = new boolean[mSize + 2];
+        site = new CellStatus[mSize + 1];
 
-        for (int i = 0; i < id.length; i++) {
-            id[i] = i;
-            openSites[i] = false;
+        for (int i = 0; i < mSize; i++) {
+            site[i] = CellStatus.BLOCKED;
         }
 
-        openSites[0] = true;
-        openSites[mSize + 1] = true;
+        site[mSize] = CellStatus.FULL;
     }
 
-    // Open site (row, col) if it is not open already
-    public    void open(int row, int col) {
+    public void open(int row, int col) {
         validate(row, col);
+        if (isOpen(row, col))
+            return;
 
-        if (!isOpen(row, col)) {
-            openSites[xyTo1D(row, col)] = true;
-            numOpenSites++;
+        site[xyTo1D(row, col)] = CellStatus.OPEN;
+        openSites++;
+        unionSurroundingOpenSites(row, col);
 
-            unionOpenSites(row, col);
+        fill(row, col);
+    }
+    
+    private void fill(int row, int col) {
+        if (!isOpen(row, col))
+            assert false;
+
+        if (row == 1 || isNeighbourFull(row, col)) {
+            site[xyTo1D(row, col)] = CellStatus.FULL;
+
+            if (col != 1 && isOpen(row, col - 1) && !isFull(row, col - 1))
+                fill(row, col - 1);
+
+            if (col != mN && isOpen(row, col + 1) && !isFull(row, col + 1))
+                fill(row, col + 1);
+
+            if (row != 1 && isOpen(row - 1, col) && !isFull(row - 1, col))
+                fill(row - 1, col);
+
+            if (row != mN && isOpen(row + 1, col) && !isFull(row + 1, col))
+                fill(row + 1, col);
         }
     }
+    
+    private boolean isNeighbourFull(int row, int col) {
+        boolean isNeighbourFull = false;
 
-    // Unions with surrounding open sites if open
-    private void unionOpenSites(int row, int col) {
+        if (col != 1)
+            isNeighbourFull |= isFull(row, col - 1);
+
+        if (col != mN)
+            isNeighbourFull |= isFull(row, col + 1);
+
+        if (row != 1)
+            isNeighbourFull |= isFull(row - 1, col);
+
+        if (row != mN)
+            isNeighbourFull |= isFull(row + 1, col);
+        
+        return isNeighbourFull;
+    }
+
+    private void unionSurroundingOpenSites(int row, int col) {
         int i = xyTo1D(row, col);
 
-        // Not left edge
-        if (col != 1)
+        if (col != 1) {
             unionOpen(i, i - 1);
-        // Not right edge
-        if (col != mN)
+        }
+
+        if (col != mN) {
             unionOpen(i, i + 1);
-        // Not top edge
-        if (row != 1)
+        }
+
+        if (row != 1) {
             unionOpen(i, i - mN);
-        else
-            ufA.union(0, i);
-        // Not bottom edge
-        if (row != mN)
+        } else {
+            // Union the site (row, col) with the virtual top site
+            ufA.union(i, mSize);
+        }
+
+        if (row != mN) {
             unionOpen(i, i + mN);
-        else
-            ufA.union(mSize + 1, i);
+        }
     }
 
     private void unionOpen(int i, int next) {
-        if (!ufA.connected(i, next) && openSites[next]) {
+        if (site[next] == CellStatus.OPEN && (ufA.find(i) != ufA.find(next))) {
             ufA.union(i, next);
         }
     }
 
-    // Convert row, col address to array index
     private int xyTo1D(int row, int col) {
-        return ((row - 1) * mN) + col;
+        return ((row - 1) * mN) + col - 1;
     }
 
-    // Is site (row, col) open?
     public boolean isOpen(int row, int col) {
         validate(row, col);
-        return openSites[xyTo1D(row, col)];
+        return site[xyTo1D(row, col)] != CellStatus.BLOCKED;
     }
 
-    // Is site (row, col) full?
     public boolean isFull(int row, int col) {
         validate(row, col);
-        return ufA.connected(0, xyTo1D(row, col));
+        return site[xyTo1D(row, col)] == CellStatus.FULL;
     }
 
-    // Number of open sites
-    public     int numberOfOpenSites() {
-        return numOpenSites;
+    public int numberOfOpenSites() {
+        return openSites;
     }
 
-    // Does the system percolate? Full site in bottom row
     public boolean percolates() {
-        return ufA.connected(0, mSize + 1);
+        for (int x = 1; x <= mN; x++) {
+            if (isFull(mN, x))
+                return true;
+        }
+        return false;
     }
-
+    
     private void validate(int row, int col) {
-        if (row <= 0 || row > mN || col <= 0 || col > mN) throw new java.lang.IllegalArgumentException("Argument out of bounds."); 
+        if (row <= 0 || row > mN || col <= 0 || col > mN) {
+            throw new IllegalArgumentException("Argument out of bounds");
+        }
     }
 
-    // Test client (optional)
     public static void main(String[] args) {
-        // Initialize all sites to be blocked
         Percolation p = new Percolation(5);
 
         while (!p.percolates()) {
-            // Choose a site uniformly at random
             int x = StdRandom.uniform(p.mN) + 1;
             int y = StdRandom.uniform(p.mN) + 1;
 
-            // Open the site
             p.open(x, y);
         }
 
-        // Fraction of open sites is estimated percolation threshold
         System.out.println("The number of open sites is " + p.numberOfOpenSites());
         System.out.println("The fraction of open sites is " + ((double) p.numberOfOpenSites()) / (p.mSize));
     }

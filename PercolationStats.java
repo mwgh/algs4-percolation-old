@@ -1,18 +1,15 @@
-/******************************************************************************
- *  Date: 2017 Aug 5
- *  Purpose of program: model multiple independent trials of Percolation
- ******************************************************************************/
-
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.StdStats;
 
 public class PercolationStats {
-    private int mT;                         // number of trials
-    private double[] percolationThreshold;  // percolation threshold trials
+    private static final double CONFIDENCE_95 = 1.96;
+    private int mT;
+    private double[] percolationThreshold;
 
-    // perform trials independent experiments on an n-by-n grid
     public PercolationStats(int n, int trials) {
-        if (n <= 0 || trials <= 0) throw new java.lang.IllegalArgumentException("Grid size n or trial number must be positive");
+        if (n <= 0 || trials <= 0) {
+            throw new IllegalArgumentException("Grid size n or number of trials must be positive");
+        }
 
         this.mT = trials;
         this.percolationThreshold = new double[trials];
@@ -29,27 +26,27 @@ public class PercolationStats {
         }
     }
 
-    // sample mean of percolation threshold
     public double mean() {
         return StdStats.mean(percolationThreshold);
     }
 
-    // sample standard deviation of percolation threshold
     public double stddev() {
         return StdStats.stddev(percolationThreshold);
     }
 
-    // low  endpoint of 95% confidence interval
     public double confidenceLo() {
-        return mean() - (1.96 * stddev()) / Math.sqrt(this.mT);
+        return mean() - (CONFIDENCE_95 * stddev()) / Math.sqrt(this.mT);
     }
 
-    // high endpoint of 95% confidence interval
     public double confidenceHi() {
-        return mean() + (1.96 * stddev()) / Math.sqrt(this.mT);
+        return mean() + (CONFIDENCE_95 * stddev()) / Math.sqrt(this.mT);
     }
 
     public static void main(String[] args) {
+        if (args.length < 2) {
+            System.err.println("Needs two arguments");
+            System.exit(1);
+        }
         PercolationStats ps = new PercolationStats(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
 
         System.out.println("mean                    = " + ps.mean());
