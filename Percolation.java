@@ -135,7 +135,7 @@ public class Percolation {
         }
         return false;
     }
-    
+
     private void validate(int row, int col) {
         if (row <= 0 || row > mN || col <= 0 || col > mN) {
             throw new IllegalArgumentException("Argument out of bounds");

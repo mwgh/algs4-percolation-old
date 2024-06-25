@@ -44,7 +44,7 @@ public class PercolationStats {
 
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.err.println("Needs two arguments");
+            System.err.println("Needs 2 arguments 1. Length of a side of the square grid & 2. number of trials");
             System.exit(1);
         }
         PercolationStats ps = new PercolationStats(Integer.parseInt(args[0]), Integer.parseInt(args[1]));
