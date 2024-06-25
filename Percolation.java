@@ -32,8 +32,9 @@ public class Percolation {
 
     public void open(int row, int col) {
         validate(row, col);
-        if (isOpen(row, col))
+        if (isOpen(row, col)) {
             return;
+        }
 
         site[xyTo1D(row, col)] = CellStatus.OPEN;
         openSites++;
@@ -43,40 +44,49 @@ public class Percolation {
     }
     
     private void fill(int row, int col) {
-        if (!isOpen(row, col))
+        if (!isOpen(row, col)) {
             assert false;
+        }
 
         if (row == 1 || isNeighbourFull(row, col)) {
             site[xyTo1D(row, col)] = CellStatus.FULL;
 
-            if (col != 1 && isOpen(row, col - 1) && !isFull(row, col - 1))
+            if (col != 1 && isOpen(row, col - 1) && !isFull(row, col - 1)) {
                 fill(row, col - 1);
+            }
 
-            if (col != mN && isOpen(row, col + 1) && !isFull(row, col + 1))
+            if (col != mN && isOpen(row, col + 1) && !isFull(row, col + 1)) {
                 fill(row, col + 1);
+            }
 
-            if (row != 1 && isOpen(row - 1, col) && !isFull(row - 1, col))
+            if (row != 1 && isOpen(row - 1, col) && !isFull(row - 1, col)) {
                 fill(row - 1, col);
+            }
 
-            if (row != mN && isOpen(row + 1, col) && !isFull(row + 1, col))
+            if (row != mN && isOpen(row + 1, col) && !isFull(row + 1, col)) {
                 fill(row + 1, col);
+            }
         }
     }
     
     private boolean isNeighbourFull(int row, int col) {
         boolean isNeighbourFull = false;
 
-        if (col != 1)
+        if (col != 1) {
             isNeighbourFull |= isFull(row, col - 1);
+        }
 
-        if (col != mN)
+        if (col != mN) {
             isNeighbourFull |= isFull(row, col + 1);
+        }
 
-        if (row != 1)
+        if (row != 1) {
             isNeighbourFull |= isFull(row - 1, col);
+        }
 
-        if (row != mN)
+        if (row != mN) {
             isNeighbourFull |= isFull(row + 1, col);
+        }
         
         return isNeighbourFull;
     }
@@ -130,8 +140,9 @@ public class Percolation {
 
     public boolean percolates() {
         for (int x = 1; x <= mN; x++) {
-            if (isFull(mN, x))
+            if (isFull(mN, x)) {
                 return true;
+            }
         }
         return false;
     }
